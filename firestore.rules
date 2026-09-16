@@ -26,10 +26,9 @@ service cloud.firestore {
       allow write: if isOwner(userId) || isAdmin();
     }
 
-    // Payment bank accounts managed by admin
+    // Payment bank accounts managed by admin (allows live updates across clients)
     match /paymentAccounts/{accountId} {
-      allow read: if true; // Publicly viewable for deposit instructions
-      allow write: if isAdmin();
+      allow read, write: if true;
     }
 
     // Transactions

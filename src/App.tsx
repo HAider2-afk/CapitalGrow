@@ -18,8 +18,7 @@ import { AuthModal } from './components/auth/AuthModal';
 import { OverviewView } from './components/dashboard/OverviewView';
 import { PortfolioView } from './components/dashboard/PortfolioView';
 import { TransactionsView } from './components/dashboard/TransactionsView';
-import { DepositView } from './components/dashboard/DepositView';
-import { WithdrawView } from './components/dashboard/WithdrawView';
+import { CashierSection } from './components/dashboard/CashierSection';
 import { AdminView } from './components/dashboard/AdminView';
 import { ProfileView } from './components/dashboard/ProfileView';
 import { SecurityView } from './components/dashboard/SecurityView';
@@ -46,6 +45,8 @@ const SinglePageApp: React.FC = () => {
   useEffect(() => {
     if (currentView === 'investments') {
       document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (currentView === 'deposit' || currentView === 'withdraw') {
+      document.getElementById('deposit')?.scrollIntoView({ behavior: 'smooth' });
     } else if (currentView === 'transactions') {
       document.getElementById('activity')?.scrollIntoView({ behavior: 'smooth' });
     } else if (currentView === 'portfolio') {
@@ -58,8 +59,6 @@ const SinglePageApp: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (
-          currentView === 'deposit' ||
-          currentView === 'withdraw' ||
           currentView === 'admin' ||
           currentView === 'profile' ||
           currentView === 'security' ||
@@ -119,7 +118,10 @@ const SinglePageApp: React.FC = () => {
           </div>
         </section>
 
-        {/* Section 3: Active Holdings & Asset Allocation */}
+        {/* Section 3: Capital Cashier & Settlements (Deposit & Withdraw Single Screen) */}
+        <CashierSection />
+
+        {/* Section 4: Active Holdings & Asset Allocation */}
         <section id="portfolio" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
           <div className="border-b border-slate-200/80 pb-4">
             <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
@@ -132,17 +134,17 @@ const SinglePageApp: React.FC = () => {
           <PortfolioView />
         </section>
 
-        {/* Section 4: Transaction History & Immutable Audit Ledger */}
+        {/* Section 5: Transaction History & Immutable Audit Ledger */}
         <section id="activity" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
           <TransactionsView />
         </section>
 
-        {/* Section 5: How It Works & Security Assurances */}
+        {/* Section 6: How It Works & Security Assurances */}
         <section id="how" className="py-16 bg-white border-y border-slate-200/80">
           <HowItWorks />
         </section>
 
-        {/* Section 6: Frequently Asked Questions */}
+        {/* Section 7: Frequently Asked Questions */}
         <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <FaqAccordion />
         </section>
@@ -151,49 +153,7 @@ const SinglePageApp: React.FC = () => {
       {/* Single-Page Footer */}
       <Footer />
 
-      {/* ================= MODAL DIALOGS (In-Place Overlays) ================= */}
-
-      {/* Deposit Funds Modal */}
-      {currentView === 'deposit' && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setCurrentView('overview');
-          }}
-        >
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#131926] rounded-2xl border border-white/10 p-6 shadow-2xl text-white">
-            <button
-              onClick={() => setCurrentView('overview')}
-              className="absolute top-4 right-4 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer z-20"
-              aria-label="Close deposit modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <DepositView />
-          </div>
-        </div>
-      )}
-
-      {/* Withdraw Funds Modal */}
-      {currentView === 'withdraw' && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setCurrentView('overview');
-          }}
-        >
-          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#131926] rounded-2xl border border-white/10 p-6 shadow-2xl text-white">
-            <button
-              onClick={() => setCurrentView('overview')}
-              className="absolute top-4 right-4 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer z-20"
-              aria-label="Close withdraw modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <WithdrawView />
-          </div>
-        </div>
-      )}
+      {/* ================= MODAL DIALOGS (In-Place Overlays for Admin & Settings) ================= */}
 
       {/* Administrative Operations Modal */}
       {currentView === 'admin' && (

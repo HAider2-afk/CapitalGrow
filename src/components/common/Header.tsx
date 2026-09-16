@@ -60,6 +60,12 @@ export const Header: React.FC = () => {
               Investment Plans
             </button>
             <button
+              onClick={() => scrollToSection('deposit')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
+              Deposit
+            </button>
+            <button
               onClick={() => scrollToSection('portfolio')}
               className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
             >
@@ -110,15 +116,21 @@ export const Header: React.FC = () => {
                   </span>
                   <div className="flex items-center gap-1 ml-1 pl-1.5 border-l border-slate-300">
                     <button
-                      onClick={() => setCurrentView('deposit')}
-                      className="p-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition-colors"
+                      onClick={() => {
+                        setCurrentView('deposit');
+                        scrollToSection('deposit');
+                      }}
+                      className="p-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer"
                       title="Deposit Funds"
                     >
                       <ArrowDownLeft className="w-3.5 h-3.5" />
                     </button>
                     <button
-                      onClick={() => setCurrentView('withdraw')}
-                      className="p-1 rounded-md bg-slate-800 hover:bg-slate-900 text-white transition-colors"
+                      onClick={() => {
+                        setCurrentView('withdraw');
+                        scrollToSection('deposit');
+                      }}
+                      className="p-1 rounded-md bg-slate-800 hover:bg-slate-900 text-white transition-colors cursor-pointer"
                       title="Withdraw Funds"
                     >
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -194,6 +206,12 @@ export const Header: React.FC = () => {
             className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
           >
             Investment Plans
+          </button>
+          <button
+            onClick={() => scrollToSection('deposit')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
+          >
+            Deposit & Cashier
           </button>
           <button
             onClick={() => scrollToSection('portfolio')}

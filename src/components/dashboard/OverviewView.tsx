@@ -92,20 +92,29 @@ export const OverviewView: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-2 relative z-10 w-full sm:w-auto">
           <button
-            onClick={() => setCurrentView('deposit')}
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-[10px] bg-[#10B981] hover:bg-[#059669] text-[#0B0F17] font-semibold text-xs sm:text-sm transition-all shadow-md whitespace-nowrap"
+            onClick={() => {
+              setCurrentView('deposit');
+              document.getElementById('deposit')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-[10px] bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-semibold text-xs sm:text-sm transition-all shadow-md whitespace-nowrap cursor-pointer"
           >
             <ArrowDownLeft className="w-4 h-4" /> Deposit Funds
           </button>
           <button
-            onClick={() => setCurrentView('withdraw')}
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-[10px] bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm border border-white/10 transition-all whitespace-nowrap"
+            onClick={() => {
+              setCurrentView('withdraw');
+              document.getElementById('deposit')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-[10px] bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm border border-white/10 transition-all whitespace-nowrap cursor-pointer"
           >
             <ArrowUpRight className="w-4 h-4" /> Withdraw
           </button>
           <button
-            onClick={() => setCurrentView('investments')}
-            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-[10px] bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm transition-all shadow-md whitespace-nowrap"
+            onClick={() => {
+              setCurrentView('investments');
+              document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-[10px] bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm transition-all shadow-md whitespace-nowrap cursor-pointer"
           >
             <Layers className="w-4 h-4" /> New Plan
           </button>
