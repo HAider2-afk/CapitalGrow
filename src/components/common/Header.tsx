@@ -1,24 +1,38 @@
 import React, { useState } from 'react';
-import { ShieldCheck, TrendingUp, Menu, X, ArrowRight, LayoutDashboard, LogIn } from 'lucide-react';
+import {
+  ShieldCheck,
+  TrendingUp,
+  Menu,
+  X,
+  ArrowDownLeft,
+  ArrowUpRight,
+  Shield,
+  User,
+  LogOut
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useApp } from '../../context/AppContext';
 
-interface HeaderProps {
-  onEnterDashboard: () => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ onEnterDashboard }) => {
-  const { isAuthenticated, user, openAuthModal } = useAuth();
-  const { currency, setCurrency } = useApp();
+export const Header: React.FC = () => {
+  const { isAuthenticated, user, openAuthModal, logout } = useAuth();
+  const { currency, setCurrency, formatCurrency, setCurrentView } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const scrollToSection = (id: string) => {
+    setMobileMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] transition-all">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
           {/* Brand Logo */}
           <div className="flex items-center gap-3">
-            <a href="#home" className="flex items-center gap-2.5 group">
+            <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="flex items-center gap-2.5 group">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
@@ -26,34 +40,58 @@ export const Header: React.FC<HeaderProps> = ({ onEnterDashboard }) => {
                 Capital<span className="text-emerald-600">Grow</span>
               </span>
             </a>
-            <span className="hidden md:inline-flex items-center gap-1 text-[11px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#10B981] border border-[#10B981]/20">
-              <ShieldCheck className="w-3 h-3" /> SECP Compliance Ready
+            <span className="hidden lg:inline-flex items-center gap-1 text-[11px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-500/20">
+              <ShieldCheck className="w-3 h-3 text-emerald-600" /> SECP Compliance Ready
             </span>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#plans" className="text-sm font-medium text-[#475569] hover:text-[#131926] transition-colors">
+          {/* Single-Page In-Page Navigation */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-7">
+            <button
+              onClick={() => scrollToSection('overview')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
+              Terminal
+            </button>
+            <button
+              onClick={() => scrollToSection('plans')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
               Investment Plans
-            </a>
-            <a href="#how" className="text-sm font-medium text-[#475569] hover:text-[#131926] transition-colors">
+            </button>
+            <button
+              onClick={() => scrollToSection('portfolio')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
+              Holdings
+            </button>
+            <button
+              onClick={() => scrollToSection('activity')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
+              Ledger
+            </button>
+            <button
+              onClick={() => scrollToSection('how')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
               How It Works
-            </a>
-            <a href="#analytics" className="text-sm font-medium text-[#475569] hover:text-[#131926] transition-colors">
-              Platform Analytics
-            </a>
-            <a href="#faq" className="text-sm font-medium text-[#475569] hover:text-[#131926] transition-colors">
+            </button>
+            <button
+              onClick={() => scrollToSection('faq')}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+            >
               FAQ
-            </a>
+            </button>
           </nav>
 
-          {/* Actions */}
+          {/* Actions & Balance / Auth */}
           <div className="hidden sm:flex items-center gap-3">
             {/* Currency switcher */}
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
-              className="text-xs font-mono font-semibold bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg px-2.5 py-1.5 text-[#131926] focus:outline-none focus:border-[#10B981]"
+              className="text-xs font-mono font-semibold bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-900 focus:outline-none focus:border-emerald-500 cursor-pointer"
               title="Select display currency"
             >
               <option value="Rs.">PKR (Rs.)</option>
@@ -63,29 +101,69 @@ export const Header: React.FC<HeaderProps> = ({ onEnterDashboard }) => {
             </select>
 
             {isAuthenticated ? (
-              <button
-                onClick={onEnterDashboard}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-[10px] bg-gradient-to-r from-[#131926] to-[#10B981] text-white text-sm font-semibold hover:shadow-lg hover:shadow-[#10B981]/25 hover:-translate-y-0.5 transition-all"
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                Go to Dashboard
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Balance chip with instant deposit/withdraw */}
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs">
+                  <span className="text-slate-500 font-medium">Bal:</span>
+                  <span className="font-mono font-bold text-slate-900">
+                    {formatCurrency(user?.balance || 0)}
+                  </span>
+                  <div className="flex items-center gap-1 ml-1 pl-1.5 border-l border-slate-300">
+                    <button
+                      onClick={() => setCurrentView('deposit')}
+                      className="p-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition-colors"
+                      title="Deposit Funds"
+                    >
+                      <ArrowDownLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setCurrentView('withdraw')}
+                      className="p-1 rounded-md bg-slate-800 hover:bg-slate-900 text-white transition-colors"
+                      title="Withdraw Funds"
+                    >
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {user?.role === 'admin' && (
+                  <button
+                    onClick={() => setCurrentView('admin')}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold shadow-xs transition-colors"
+                  >
+                    <Shield className="w-3.5 h-3.5" />
+                    Admin
+                  </button>
+                )}
+
+                <div className="flex items-center gap-1.5 pl-1">
+                  <span className="text-xs font-medium text-slate-700 hidden lg:inline">
+                    {user?.fullName?.split(' ')[0]}
+                  </span>
+                  <button
+                    onClick={logout}
+                    className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             ) : (
-              <>
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => openAuthModal('login')}
-                  className="px-4 py-2 rounded-[10px] border border-[#E2E8F0] text-[#131926] text-sm font-semibold hover:border-[#131926] transition-colors"
+                  className="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-800 text-xs font-semibold hover:border-slate-800 transition-colors"
                 >
                   Log In
                 </button>
                 <button
                   onClick={() => openAuthModal('register')}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-gradient-to-r from-[#10B981] to-[#10B981] text-white text-sm font-semibold hover:shadow-lg hover:shadow-[#10B981]/25 hover:-translate-y-0.5 transition-all"
+                  className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
                 >
                   Get Started
                 </button>
-              </>
+              </div>
             )}
           </div>
 
@@ -93,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({ onEnterDashboard }) => {
           <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-[#131926] hover:bg-[#F8FAFC]"
+              className="p-2 rounded-lg text-slate-900 hover:bg-slate-100"
               aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -104,67 +182,95 @@ export const Header: React.FC<HeaderProps> = ({ onEnterDashboard }) => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="sm:hidden bg-white border-b border-[#E2E8F0] px-4 pt-3 pb-6 space-y-3">
-          <a
-            href="#plans"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-[#131926]"
+        <div className="sm:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2">
+          <button
+            onClick={() => scrollToSection('overview')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
+          >
+            Dashboard Terminal
+          </button>
+          <button
+            onClick={() => scrollToSection('plans')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
           >
             Investment Plans
-          </a>
-          <a
-            href="#how"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-[#131926]"
+          </button>
+          <button
+            onClick={() => scrollToSection('portfolio')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
+          >
+            Portfolio Holdings
+          </button>
+          <button
+            onClick={() => scrollToSection('activity')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
+          >
+            Audit Ledger
+          </button>
+          <button
+            onClick={() => scrollToSection('how')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
           >
             How It Works
-          </a>
-          <a
-            href="#analytics"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-[#131926]"
-          >
-            Platform Analytics
-          </a>
-          <a
-            href="#faq"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-base font-medium text-[#131926]"
+          </button>
+          <button
+            onClick={() => scrollToSection('faq')}
+            className="w-full text-left py-2 text-sm font-medium text-slate-800 hover:text-emerald-600"
           >
             FAQ
-          </a>
-          <div className="pt-3 border-t border-[#E2E8F0] flex flex-col gap-2">
+          </button>
+
+          <div className="pt-3 border-t border-slate-200 flex flex-col gap-2">
             {isAuthenticated ? (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onEnterDashboard();
-                }}
-                className="w-full py-2.5 rounded-[10px] bg-[#10B981] text-white font-semibold text-sm flex items-center justify-center gap-2"
-              >
-                <LayoutDashboard className="w-4 h-4" /> Go to Dashboard
-              </button>
-            ) : (
-              <>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs text-slate-600">
+                  <span>Balance:</span>
+                  <span className="font-mono font-bold text-slate-900">{formatCurrency(user?.balance || 0)}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); setCurrentView('deposit'); }}
+                    className="py-2 rounded-lg bg-emerald-600 text-white font-semibold text-xs flex items-center justify-center gap-1"
+                  >
+                    <ArrowDownLeft className="w-3.5 h-3.5" /> Deposit
+                  </button>
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); setCurrentView('withdraw'); }}
+                    className="py-2 rounded-lg bg-slate-800 text-white font-semibold text-xs flex items-center justify-center gap-1"
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5" /> Withdraw
+                  </button>
+                </div>
+                {user?.role === 'admin' && (
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); setCurrentView('admin'); }}
+                    className="w-full py-2 rounded-lg bg-amber-500 text-white font-semibold text-xs flex items-center justify-center gap-1"
+                  >
+                    <Shield className="w-3.5 h-3.5" /> Admin Console
+                  </button>
+                )}
                 <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openAuthModal('login');
-                  }}
-                  className="w-full py-2 rounded-[10px] border border-[#E2E8F0] text-[#131926] font-semibold text-sm"
+                  onClick={() => { setMobileMenuOpen(false); logout(); }}
+                  className="w-full py-2 rounded-lg border border-slate-200 text-slate-700 text-xs font-medium"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => { setMobileMenuOpen(false); openAuthModal('login'); }}
+                  className="py-2 rounded-lg border border-slate-200 text-slate-800 font-semibold text-xs"
                 >
                   Log In
                 </button>
                 <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    openAuthModal('register');
-                  }}
-                  className="w-full py-2.5 rounded-[10px] bg-[#10B981] text-white font-semibold text-sm"
+                  onClick={() => { setMobileMenuOpen(false); openAuthModal('register'); }}
+                  className="py-2 rounded-lg bg-emerald-600 text-white font-semibold text-xs"
                 >
                   Get Started
                 </button>
-              </>
+              </div>
             )}
           </div>
         </div>

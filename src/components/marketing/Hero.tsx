@@ -5,15 +5,23 @@ import { useAuth } from '../../context/AuthContext';
 import { useApp } from '../../context/AppContext';
 
 interface HeroProps {
-  onEnterDashboard: () => void;
+  onEnterDashboard?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
   const { isAuthenticated, openAuthModal } = useAuth();
   const { formatCurrency } = useApp();
 
+  const handleScrollToTerminal = () => {
+    if (onEnterDashboard) {
+      onEnterDashboard();
+    } else {
+      document.getElementById('overview')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-gradient-to-b from-[#F6F7FC] via-white to-[#F6F7FC]">
+    <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC]">
       {/* Decorative subtle ambient depth */}
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/8 blur-3xl pointer-events-none -z-10 rounded-full" />
       <div className="absolute -top-10 right-0 w-[300px] h-[300px] bg-emerald-500/5 blur-2xl pointer-events-none -z-10" />
@@ -49,10 +57,10 @@ export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
 
               {isAuthenticated ? (
                 <button
-                  onClick={onEnterDashboard}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[10px] bg-slate-900 text-white font-semibold text-base hover:bg-slate-800 shadow-md transition-all"
+                  onClick={handleScrollToTerminal}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-[10px] bg-slate-900 text-white font-semibold text-base hover:bg-slate-800 shadow-md transition-all cursor-pointer"
                 >
-                  Launch Dashboard
+                  View Terminal & Portfolio
                 </button>
               ) : (
                 <button
@@ -66,24 +74,24 @@ export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
 
             {/* Micro badges & Risk disclaimer */}
             <div className="pt-4 space-y-3">
-              <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-[#667085]">
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-[#475569]">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#18C8B5]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
                   <span>Instant Verification</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#18C8B5]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
                   <span>Transparent Fee Model</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Lock className="w-4 h-4 text-[#635BFF]" />
+                  <Lock className="w-4 h-4 text-[#10B981]" />
                   <span>256-Bit Bank Encryption</span>
                 </div>
               </div>
 
-              <p className="text-xs text-[#667085] leading-normal pt-1">
-                <span className="font-semibold text-[#20204A]">Important Notice:</span> No guaranteed returns. All investing carries capital risk — please review our{' '}
-                <a href="#faq" className="underline hover:text-[#635BFF]">
+              <p className="text-xs text-[#475569] leading-normal pt-1">
+                <span className="font-semibold text-[#131926]">Important Notice:</span> No guaranteed returns. All investing carries capital risk — please review our{' '}
+                <a href="#faq" className="underline hover:text-[#10B981]">
                   Statutory Risk Disclosure
                 </a>.
               </p>
@@ -93,31 +101,31 @@ export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
           {/* Right Column: 3D Portfolio Value Live Card */}
           <div className="lg:col-span-5 relative">
             {/* Background glow accent */}
-            <div className="absolute -inset-1 rounded-[22px] bg-gradient-to-r from-[#635BFF] via-[#8B5CF6] to-[#18C8B5] opacity-35 blur-xl group-hover:opacity-60 transition duration-1000 -z-10" />
+            <div className="absolute -inset-1 rounded-[22px] bg-gradient-to-r from-[#10B981] via-[#8B5CF6] to-[#10B981] opacity-35 blur-xl group-hover:opacity-60 transition duration-1000 -z-10" />
 
-            <div className="relative bg-[#20204A] rounded-[18px] p-6 sm:p-7 text-white shadow-2xl shadow-[#0B1026]/40 border border-white/10 backdrop-blur-xl">
+            <div className="relative bg-[#131926] rounded-[18px] p-6 sm:p-7 text-white shadow-2xl shadow-[#0B0F17]/40 border border-white/10 backdrop-blur-xl">
               {/* Card Header */}
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <div className="flex items-center gap-1.5 text-xs font-mono tracking-wider text-[#89A0AF] uppercase">
-                    <span className="w-2 h-2 rounded-full bg-[#18C8B5] animate-ping" />
+                  <div className="flex items-center gap-1.5 text-xs font-mono tracking-wider text-[#94A3B8] uppercase">
+                    <span className="w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
                     <span>Live Portfolio (Platform Tier)</span>
                   </div>
                   <div className="font-heading text-3xl sm:text-4xl font-bold mt-1 tracking-tight text-white">
                     {formatCurrency(184320)}
                   </div>
                 </div>
-                <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#18C8B5]/20 text-[#8FE3B0] border border-[#18C8B5]/30 text-xs font-mono font-semibold">
+                <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#10B981]/20 text-[#34D399] border border-[#10B981]/30 text-xs font-mono font-semibold">
                   <TrendingUp className="w-3.5 h-3.5" />
                   +6.2% this cycle
                 </div>
               </div>
 
               {/* Chart canvas */}
-              <div className="my-2 bg-[#0B1026]/50 rounded-xl p-3 border border-white/5">
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#89A0AF] mb-1">
+              <div className="my-2 bg-[#0B0F17]/50 rounded-xl p-3 border border-white/5">
+                <div className="flex items-center justify-between text-[11px] font-mono text-[#94A3B8] mb-1">
                   <span>6-Month Trajectory</span>
-                  <span className="text-[#8FE3B0] font-semibold">+Rs. 34,320 gain</span>
+                  <span className="text-[#34D399] font-semibold">+Rs. 34,320 gain</span>
                 </div>
                 <MiniChart height={95} />
               </div>
@@ -125,19 +133,19 @@ export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
               {/* Card Meta breakdown strip */}
               <div className="grid grid-cols-3 gap-3 pt-4 mt-2 border-t border-white/10 text-left">
                 <div>
-                  <div className="text-[11px] font-mono text-[#89A0AF]">Invested</div>
+                  <div className="text-[11px] font-mono text-[#94A3B8]">Invested</div>
                   <div className="text-sm sm:text-base font-bold text-white font-mono-num mt-0.5">
                     {formatCurrency(150000)}
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] font-mono text-[#89A0AF]">Available</div>
-                  <div className="text-sm sm:text-base font-bold text-[#8FE3B0] font-mono-num mt-0.5">
+                  <div className="text-[11px] font-mono text-[#94A3B8]">Available</div>
+                  <div className="text-sm sm:text-base font-bold text-[#34D399] font-mono-num mt-0.5">
                     {formatCurrency(12400)}
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] font-mono text-[#89A0AF]">Active Plans</div>
+                  <div className="text-[11px] font-mono text-[#94A3B8]">Active Plans</div>
                   <div className="text-sm sm:text-base font-bold text-white font-mono-num mt-0.5">
                     3 Active
                   </div>
@@ -145,9 +153,9 @@ export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
               </div>
 
               {/* Live Status indicator */}
-              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-[#89A0AF] font-mono">
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-[#94A3B8] font-mono">
                 <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#18C8B5]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
                   Ledger Sync: Real-Time
                 </span>
                 <span className="text-white/80">Asset Rebalance: Active</span>
