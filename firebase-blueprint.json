@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CapitalGrow Firestore Blueprint",
+  "description": "Firestore schema definition and access model for CapitalGrow investment platform",
+  "entities": {
+    "users": {
+      "description": "Investor and administrative user profiles",
+      "fields": {
+        "id": { "type": "string" },
+        "uid": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "balance": { "type": "number" },
+        "totalInvested": { "type": "number" },
+        "kycStatus": { "type": "string", "enum": ["unverified", "pending", "verified", "rejected"] },
+        "kycStep": { "type": "number" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "fullName", "role"]
+    },
+    "paymentAccounts": {
+      "description": "Company escrow and treasury bank accounts for receiving investor deposits",
+      "fields": {
+        "id": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountTitle": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "iban": { "type": "string" },
+        "branchCode": { "type": "string" },
+        "isEscrow": { "type": "boolean" },
+        "isDefault": { "type": "boolean" },
+        "isActive": { "type": "boolean" },
+        "notes": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["bankName", "accountTitle", "accountNumber", "iban"]
+    },
+    "transactions": {
+      "description": "Deposit, withdrawal, and yield accrual records",
+      "fields": {
+        "id": { "type": "string" },
+        "referenceId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "type": { "type": "string", "enum": ["deposit", "withdrawal", "investment", "return", "bonus"] },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed", "rejected"] },
+        "date": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "method": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "proofReceiptUrl": { "type": "string" },
+        "adminNotes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["referenceId", "userId", "type", "amount", "status"]
+    },
+    "holdings": {
+      "description": "Active investor asset allocations and locked plans",
+      "fields": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "planId": { "type": "string" },
+        "planName": { "type": "string" },
+        "planIcon": { "type": "string" },
+        "investedAmount": { "type": "number" },
+        "dailyYieldRate": { "type": "number" },
+        "dailyYieldAmount": { "type": "number" },
+        "totalEarned": { "type": "number" },
+        "startDate": { "type": "string" },
+        "maturityDays": { "type": "number" },
+        "daysActive": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "completed", "liquidated"] },
+        "autoReinvest": { "type": "boolean" }
+      },
+      "required": ["userId", "planId", "investedAmount", "status"]
+    },
+    "supportTickets": {
+      "description": "Customer support inquiries and message threads",
+      "fields": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "subject": { "type": "string" },
+        "category": { "type": "string" },
+        "priority": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "in_progress", "resolved"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "transactionRef": { "type": "string" },
+        "messages": { "type": "array" }
+      },
+      "required": ["userId", "subject", "category", "priority", "status"]
+    },
+    "notifications": {
+      "description": "In-app notifications and alerts",
+      "fields": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "type": { "type": "string", "enum": ["info", "success", "warning", "alert"] },
+        "read": { "type": "boolean" }
+      },
+      "required": ["title", "description", "read"]
+    },
+    "auditLogs": {
+      "description": "Administrative compliance and audit trails",
+      "fields": {
+        "id": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "performedBy": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "severity": { "type": "string" }
+      },
+      "required": ["action", "performedBy", "timestamp"]
+    }
+  }
+}

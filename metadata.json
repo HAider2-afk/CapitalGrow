@@ -1,0 +1,6 @@
+{
+  "name": "CapitalGrow",
+  "description": "Smart investing and transparent wealth growth platform featuring interactive 3D spatial visualizers, multi-tier plans, real-time analytics, portfolio management, KYC verification, customer support desk, Firebase cloud persistence, and admin control.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

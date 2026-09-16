@@ -1,0 +1,22 @@
+# Render Blueprint Specification (Infrastructure-as-Code)
+# Documentation: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: capitalgrow-backend
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: PORT
+        value: 10000

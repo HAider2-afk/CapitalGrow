@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CapitalGrow — Smart Investing. Transparent Growth.</title>
+    <meta name="description" content="Smart investing and transparent wealth growth platform featuring interactive 3D spatial visualizers, multi-tier plans, real-time analytics, portfolio management, KYC verification, customer support desk, Firebase cloud persistence, and admin control." />
+    <meta property="og:title" content="CapitalGrow — Smart Investing. Transparent Growth." />
+    <meta property="og:description" content="Smart investing and transparent wealth growth platform featuring interactive 3D spatial visualizers, multi-tier plans, real-time analytics, portfolio management, KYC verification, customer support desk, Firebase cloud persistence, and admin control." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Work+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  </head>
+  <body class="antialiased bg-[#F6F7FC] text-[#17182B] selection:bg-[#635BFF] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Immediately unregister any stale service workers to prevent module interception
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var i = 0; i < registrations.length; i++) {
+            registrations[i].unregister();
+          }
+        }).catch(function() {});
+      }
+      if ('caches' in window) {
+        caches.keys().then(function(keys) {
+          for (var i = 0; i < keys.length; i++) {
+            caches.delete(keys[i]);
+          }
+        }).catch(function() {});
+      }
+    </script>
+  </body>
+</html>
+
