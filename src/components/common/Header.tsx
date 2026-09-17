@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useApp } from '../../context/AppContext';
+import { ThemeSelector } from './ThemeSelector';
 
 export const Header: React.FC = () => {
   const { isAuthenticated, user, openAuthModal, logout } = useAuth();
@@ -92,7 +93,10 @@ export const Header: React.FC = () => {
           </nav>
 
           {/* Actions & Balance / Auth */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2.5">
+            {/* Theme & Typography Customizer */}
+            <ThemeSelector />
+
             {/* Currency switcher */}
             <select
               value={currency}
@@ -239,6 +243,10 @@ export const Header: React.FC = () => {
           </button>
 
           <div className="pt-3 border-t border-slate-200 flex flex-col gap-2">
+            <div className="flex items-center justify-between py-1">
+              <span className="text-xs font-semibold text-slate-700">Theme & Style:</span>
+              <ThemeSelector />
+            </div>
             {isAuthenticated ? (
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-slate-600">

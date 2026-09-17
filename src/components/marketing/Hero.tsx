@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({ onEnterDashboard }) => {
             </div>
           </div>
 
-          {/* Right Column: 3D Portfolio Value Live Card */}
+          {/* Right Column: Live Portfolio Telemetry Card */}
           <div className="lg:col-span-5 relative">
             {/* Background glow accent */}
             <div className="absolute -inset-1 rounded-[22px] bg-gradient-to-r from-[#10B981] via-[#8B5CF6] to-[#10B981] opacity-35 blur-xl group-hover:opacity-60 transition duration-1000 -z-10" />

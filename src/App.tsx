@@ -76,7 +76,7 @@ const SinglePageApp: React.FC = () => {
   }, [currentView, setCurrentView]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased selection:bg-[#10B981] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col font-sans antialiased selection:bg-emerald-500 selection:text-white">
       {/* Sticky Single-Page Navigation Header */}
       <Header />
 
@@ -90,14 +90,14 @@ const SinglePageApp: React.FC = () => {
         {/* Audited Trust & Stats Strip */}
         <StatsStrip />
 
-        {/* Section 1: Real-Time Investor Dashboard & 3D Spatial Terminal */}
+        {/* Section 1: Real-Time Investor Dashboard & Portfolio Terminal */}
         <section id="overview" className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
           <div className="border-b border-slate-200/80 pb-4">
             <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-              Investor Dashboard & Spatial Terminal
+              Investor Dashboard & Portfolio Terminal
             </h2>
             <p className="text-sm text-slate-500 mt-1">
-              Live portfolio telemetry, marked-to-market balances, and interactive 3D WebGL spatial liquidity engine
+              Live portfolio telemetry, marked-to-market balances, and real-time capital analytics
             </p>
           </div>
           <OverviewView />

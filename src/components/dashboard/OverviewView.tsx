@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   TrendingUp,
   Wallet,
@@ -10,16 +10,11 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  Box,
-  Globe
+  ShieldCheck
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
 import { PerformanceChart } from '../charts/PerformanceChart';
-import { Card3DTilt } from '../three3d/Card3DTilt';
-import { ThreeVaultVisualizer } from '../three3d/ThreeVaultVisualizer';
-import { ThreeGlobalGlobe } from '../three3d/ThreeGlobalGlobe';
-import { ErrorBoundary } from '../common/ErrorBoundary';
 
 export const OverviewView: React.FC = () => {
   const {
@@ -34,7 +29,6 @@ export const OverviewView: React.FC = () => {
     isDarkMode
   } = useApp();
   const { user } = useAuth();
-  const [active3DTab, setActive3DTab] = useState<'vault' | 'globe'>('vault');
 
   const kpis = [
     {
@@ -121,83 +115,91 @@ export const OverviewView: React.FC = () => {
         </div>
       </div>
 
-      {/* 4 Colored KPI Cards with 3D Tilt */}
+      {/* 4 Colored KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((kpi, idx) => (
-          <Card3DTilt key={idx} maxTilt={8} glare={true} className="rounded-[18px]">
-            <div
-              className={`p-5 rounded-[18px] bg-gradient-to-br ${kpi.gradient} text-white shadow-lg relative overflow-hidden h-full`}
-            >
-              <div className="text-xs font-medium text-white/80">{kpi.label}</div>
-              <div className="font-heading text-2xl sm:text-3xl font-bold my-1.5 tracking-tight font-mono-num">
-                {kpi.value}
-              </div>
-              <div className="flex items-center justify-between text-xs text-white/90 pt-1 border-t border-white/15">
-                <span className="font-mono font-medium">{kpi.delta}</span>
-                <span className="text-[10px] text-white/60">{kpi.subtext}</span>
-              </div>
+          <div
+            key={idx}
+            className={`p-5 rounded-[18px] bg-gradient-to-br ${kpi.gradient} text-white shadow-lg relative overflow-hidden h-full border border-white/10 hover:shadow-xl transition-all`}
+          >
+            <div className="text-xs font-medium text-white/80">{kpi.label}</div>
+            <div className="font-heading text-2xl sm:text-3xl font-bold my-1.5 tracking-tight font-mono-num">
+              {kpi.value}
             </div>
-          </Card3DTilt>
+            <div className="flex items-center justify-between text-xs text-white/90 pt-1 border-t border-white/15">
+              <span className="font-mono font-medium">{kpi.delta}</span>
+              <span className="text-[10px] text-white/60">{kpi.subtext}</span>
+            </div>
+          </div>
         ))}
       </div>
 
-      {/* 3D Real-Time Spatial Engine */}
+      {/* Real-Time Asset Allocation & Strategy Telemetry */}
       <div className="rounded-[22px] bg-[#131926] border border-white/10 p-5 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-              <Box className="w-4 h-4" />
+              <PieChart className="w-4 h-4" />
             </div>
             <div>
               <h3 className="font-heading text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                3D Real-Time Spatial Engine
+                Capital Allocation & Risk Diversification
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                  WebGL 3D
+                  Real-Time
                 </span>
               </h3>
               <p className="text-xs text-[#94A3B8]">
-                Interactive 3D geometry, portfolio crystals, and multi-hub liquidity routing
+                Multi-strategy risk hedging, collateral distribution, and liquidity reserves
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/30 border border-white/10 self-stretch sm:self-auto">
-            <button
-              onClick={() => setActive3DTab('vault')}
-              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                active3DTab === 'vault'
-                  ? 'bg-emerald-500 text-white shadow'
-                  : 'text-[#94A3B8] hover:text-white'
-              }`}
-            >
-              <Box className="w-3.5 h-3.5" />
-              <span>3D Asset Vault</span>
-            </button>
-            <button
-              onClick={() => setActive3DTab('globe')}
-              className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                active3DTab === 'globe'
-                  ? 'bg-gradient-to-r from-[#10B981] to-[#059669] text-[#0B0F17] shadow font-bold'
-                  : 'text-[#94A3B8] hover:text-white'
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>3D Liquidity Mesh</span>
-            </button>
+          <div className="flex items-center gap-2 text-xs font-mono text-emerald-400">
+            <ShieldCheck className="w-4 h-4" />
+            <span>100% Reserve Backed</span>
           </div>
         </div>
 
-        {/* Dynamic 3D Canvas Switcher */}
-        <ErrorBoundary title="3D Spatial Engine Recovery Mode">
-          {active3DTab === 'vault' ? (
-            <ThreeVaultVisualizer
-              portfolioValue={formatCurrency(totalPortfolioValue)}
-              profitRate={`+${portfolioGrowthPercentage}%`}
-            />
-          ) : (
-            <ThreeGlobalGlobe />
-          )}
-        </ErrorBoundary>
+        {/* Multi-segment distribution bar */}
+        <div className="space-y-2">
+          <div className="h-3 w-full rounded-full bg-white/10 overflow-hidden flex">
+            <div style={{ width: '40%' }} className="bg-emerald-500 h-full transition-all" title="Growth Strategy (40%)" />
+            <div style={{ width: '30%' }} className="bg-blue-500 h-full transition-all" title="Fixed Yield (30%)" />
+            <div style={{ width: '20%' }} className="bg-amber-500 h-full transition-all" title="Venture Tier (20%)" />
+            <div style={{ width: '10%' }} className="bg-purple-500 h-full transition-all" title="Liquid Cash (10%)" />
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs font-mono">
+            <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+              <div className="flex items-center gap-1.5 text-slate-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                <span>Growth Strategy</span>
+              </div>
+              <div className="font-bold text-white text-sm mt-1">40% <span className="text-[10px] text-emerald-400 font-normal">({formatCurrency(totalPortfolioValue * 0.4)})</span></div>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+              <div className="flex items-center gap-1.5 text-slate-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                <span>Fixed Yield</span>
+              </div>
+              <div className="font-bold text-white text-sm mt-1">30% <span className="text-[10px] text-blue-400 font-normal">({formatCurrency(totalPortfolioValue * 0.3)})</span></div>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+              <div className="flex items-center gap-1.5 text-slate-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                <span>Venture Tier</span>
+              </div>
+              <div className="font-bold text-white text-sm mt-1">20% <span className="text-[10px] text-amber-400 font-normal">({formatCurrency(totalPortfolioValue * 0.2)})</span></div>
+            </div>
+            <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+              <div className="flex items-center gap-1.5 text-slate-400">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
+                <span>Cash Reserve</span>
+              </div>
+              <div className="font-bold text-white text-sm mt-1">10% <span className="text-[10px] text-purple-400 font-normal">({formatCurrency(totalPortfolioValue * 0.1)})</span></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main 2-Column: Portfolio Performance Graph + Recent Activity */}

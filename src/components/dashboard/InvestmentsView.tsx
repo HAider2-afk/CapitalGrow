@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
-import { Layers, PlusCircle, CheckCircle2, ShieldCheck, ArrowRight, AlertCircle, Sparkles, Box } from 'lucide-react';
+import {
+  Layers,
+  PlusCircle,
+  CheckCircle2,
+  ShieldCheck,
+  ArrowRight,
+  AlertCircle,
+  Sparkles,
+  TrendingUp,
+  Zap,
+  Crown
+} from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
 import { Plan } from '../../types';
-import { ThreePlanBadge } from '../three3d/ThreePlanBadge';
-import { Card3DTilt } from '../three3d/Card3DTilt';
-import { ThreeCoinCelebration } from '../three3d/ThreeCoinCelebration';
 
 export const InvestmentsView: React.FC = () => {
   const { plans, holdings, formatCurrency, investInPlan, setCurrentView } = useApp();
@@ -15,6 +23,23 @@ export const InvestmentsView: React.FC = () => {
   const [allocationAmount, setAllocationAmount] = useState<number>(10000);
   const [feedbackMsg, setFeedbackMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [showCelebration, setShowCelebration] = useState<boolean>(false);
+
+  const getPlanIcon = (name: string) => {
+    const n = name.toLowerCase();
+    if (n.includes('conservative') || n.includes('starter') || n.includes('shield')) {
+      return <ShieldCheck className="w-5 h-5 text-emerald-400" />;
+    }
+    if (n.includes('growth') || n.includes('premium')) {
+      return <TrendingUp className="w-5 h-5 text-blue-400" />;
+    }
+    if (n.includes('yield') || n.includes('compound') || n.includes('ultra')) {
+      return <Zap className="w-5 h-5 text-amber-400" />;
+    }
+    if (n.includes('institutional') || n.includes('vip') || n.includes('capital')) {
+      return <Crown className="w-5 h-5 text-purple-400" />;
+    }
+    return <Sparkles className="w-5 h-5 text-emerald-400" />;
+  };
 
   const handleAllocate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,11 +137,9 @@ export const InvestmentsView: React.FC = () => {
                           : 'bg-white/5 border-white/10 text-[#94A3B8] hover:bg-white/10'
                       }`}
                     >
-                      <ThreePlanBadge
-                        planType={p.name}
-                        color={isSelected ? '#10B981' : '#10B981'}
-                        size={42}
-                      />
+                      <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                        {getPlanIcon(p.name)}
+                      </div>
                       <div className="min-w-0 flex-1">
                         <div className="font-bold text-xs text-white truncate">{p.name}</div>
                         <div className="text-[11px] font-mono text-[#34D399] font-semibold">
@@ -247,20 +270,20 @@ export const InvestmentsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 3D Strategy Showcase Cards Grid */}
+      {/* Strategy Showcase Cards Grid */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Box className="w-4 h-4 text-[#10B981]" />
+            <Layers className="w-4 h-4 text-emerald-400" />
             <h3 className="font-heading text-lg font-bold text-white">
-              3D Interactive Strategy Gems
+              Available Investment Strategies
             </h3>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-white/10 text-[#34D399]">
-              Hover & Tilt
+              Verified Tiers
             </span>
           </div>
           <span className="text-xs text-[#94A3B8] hidden sm:inline">
-            Physics-driven 3D crystals mapped to risk categories
+            Risk-adjusted algorithmic and fixed-yield portfolios
           </span>
         </div>
 
@@ -268,75 +291,118 @@ export const InvestmentsView: React.FC = () => {
           {plans.map((p) => {
             const isCurrentSelected = selectedPlan.id === p.id;
             return (
-              <Card3DTilt key={p.id} maxTilt={10} glare={true} className="rounded-[18px]">
-                <div
-                  className={`p-5 rounded-[18px] border transition-all h-full flex flex-col justify-between ${
-                    isCurrentSelected
-                      ? 'bg-gradient-to-b from-[#202052] to-[#16173a] border-[#10B981] shadow-xl'
-                      : 'bg-[#181a3d] border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <ThreePlanBadge
-                        planType={p.name}
-                        color={isCurrentSelected ? '#10B981' : '#10B981'}
-                        size={56}
-                      />
-                      <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[#94A3B8]">
-                        {p.riskLabel}
-                      </span>
+              <div
+                key={p.id}
+                className={`p-5 rounded-[18px] border transition-all h-full flex flex-col justify-between ${
+                  isCurrentSelected
+                    ? 'bg-gradient-to-b from-[#202052] to-[#16173a] border-emerald-500 shadow-xl'
+                    : 'bg-[#181a3d] border-white/10 hover:border-white/20'
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                      {getPlanIcon(p.name)}
                     </div>
-
-                    <h4 className="font-heading text-base font-bold text-white">{p.name}</h4>
-                    <p className="text-xs text-[#94A3B8] mt-1 line-clamp-2">{p.description || p.returnSubtext}</p>
-
-                    <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-xs font-mono">
-                      <div className="flex justify-between">
-                        <span className="text-[#94A3B8]">Target ROI:</span>
-                        <span className="text-[#34D399] font-bold">{p.projectedReturn}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#94A3B8]">Lockup:</span>
-                        <span className="text-white">{p.lockupPeriod || 'Flexible (30-90 Days)'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#94A3B8]">Min Investment:</span>
-                        <span className="text-white">{formatCurrency(p.minInvestment)}</span>
-                      </div>
-                    </div>
+                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[#94A3B8]">
+                      {p.riskLabel}
+                    </span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedPlan(p);
-                      setAllocationAmount(p.minInvestment);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`mt-4 w-full py-2 rounded-xl text-xs font-semibold transition-all ${
-                      isCurrentSelected
-                        ? 'bg-[#10B981] text-[#0B0F17] font-bold shadow'
-                        : 'bg-white/10 hover:bg-white/15 text-white'
-                    }`}
-                  >
-                    {isCurrentSelected ? 'Strategy Selected ✓' : 'Select Strategy'}
-                  </button>
+                  <h4 className="font-heading text-base font-bold text-white">{p.name}</h4>
+                  <p className="text-xs text-[#94A3B8] mt-1 line-clamp-2">{p.description || p.returnSubtext}</p>
+
+                  <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5 text-xs font-mono">
+                    <div className="flex justify-between">
+                      <span className="text-[#94A3B8]">Target ROI:</span>
+                      <span className="text-[#34D399] font-bold">{p.projectedReturn}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#94A3B8]">Lockup:</span>
+                      <span className="text-white">{p.lockupPeriod || 'Flexible (30-90 Days)'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#94A3B8]">Min Investment:</span>
+                      <span className="text-white">{formatCurrency(p.minInvestment)}</span>
+                    </div>
+                  </div>
                 </div>
-              </Card3DTilt>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedPlan(p);
+                    setAllocationAmount(p.minInvestment);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`mt-4 w-full py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                    isCurrentSelected
+                      ? 'bg-emerald-500 text-[#0B0F17] font-bold shadow'
+                      : 'bg-white/10 hover:bg-white/15 text-white'
+                  }`}
+                >
+                  {isCurrentSelected ? 'Strategy Selected ✓' : 'Select Strategy'}
+                </button>
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* 3D Success Celebration Modal */}
+      {/* Clean Success Confirmation Modal */}
       {showCelebration && (
-        <ThreeCoinCelebration
-          title="Capital Successfully Deployed!"
-          subtitle={`Your capital is now active under the ${selectedPlan.name} strategy and generating compounding daily yield.`}
-          amount={formatCurrency(allocationAmount)}
-          onClose={() => setShowCelebration(false)}
-        />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-2xl bg-[#131926] border border-white/15 p-6 sm:p-8 text-white shadow-2xl text-center space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mx-auto flex items-center justify-center shadow-lg">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+
+            <div>
+              <h3 className="font-heading text-2xl font-bold text-white">
+                Capital Successfully Deployed!
+              </h3>
+              <p className="text-xs sm:text-sm text-[#94A3B8] mt-1.5 leading-relaxed">
+                Your capital is now active under the <strong className="text-white">{selectedPlan.name}</strong> strategy and generating compounding daily yield.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2 text-xs font-mono text-left">
+              <div className="flex justify-between">
+                <span className="text-slate-400">Deployed Amount:</span>
+                <span className="text-white font-bold text-sm font-mono-num">{formatCurrency(allocationAmount)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Projected Return:</span>
+                <span className="text-emerald-400 font-bold">{selectedPlan.projectedReturn}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Risk Profile:</span>
+                <span className="text-slate-200 capitalize">{selectedPlan.riskLabel}</span>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCelebration(false);
+                  setCurrentView('overview');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold text-xs sm:text-sm transition-all shadow-md cursor-pointer"
+              >
+                Go to Dashboard
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowCelebration(false)}
+                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs sm:text-sm border border-white/10 transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
