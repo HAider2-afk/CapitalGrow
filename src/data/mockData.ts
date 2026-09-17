@@ -169,7 +169,7 @@ export const INITIAL_USER: UserProfile = {
   referralCode: 'CG-7XQ2',
   referralCount: 14,
   referralRewards: 4200,
-  role: 'admin'
+  role: 'user'
 };
 
 export const INITIAL_HOLDINGS: UserHolding[] = [

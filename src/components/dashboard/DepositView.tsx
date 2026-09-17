@@ -14,6 +14,7 @@ import {
   Edit3
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
 import { AdminPaymentAccount } from '../../types';
 import { AccountFormModal } from '../admin/AccountFormModal';
 
@@ -23,6 +24,11 @@ interface DepositViewProps {
 
 export const DepositView: React.FC<DepositViewProps> = ({ onSuccess }) => {
   const { addDeposit, formatCurrency, paymentAccounts, addPaymentAccount, updatePaymentAccount } = useApp();
+  const { user } = useAuth();
+  const isAdmin =
+    user?.role === 'admin' ||
+    user?.email?.toLowerCase() === 'axe.de12@gmail.com' ||
+    user?.email?.toLowerCase() === 'admin@capitalgrow.investments';
 
   const activeAccounts = paymentAccounts.filter((a) => a.isActive);
   const defaultAccount = activeAccounts.find((a) => a.isPrimary) || activeAccounts[0];
@@ -131,16 +137,18 @@ export const DepositView: React.FC<DepositViewProps> = ({ onSuccess }) => {
             <label className="block text-xs font-semibold text-slate-200">
               1. Select Official Depository Account
             </label>
-            <button
-              type="button"
-              onClick={() => {
-                setAccountToEdit(null);
-                setIsAccountModalOpen(true);
-              }}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/25 text-[11px] font-semibold transition-colors cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5" /> Upload / Add Account Live
-            </button>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  setAccountToEdit(null);
+                  setIsAccountModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/25 text-[11px] font-semibold transition-colors cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" /> Upload / Add Account Live
+              </button>
+            )}
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
             {activeAccounts.map((account) => {
@@ -178,17 +186,19 @@ export const DepositView: React.FC<DepositViewProps> = ({ onSuccess }) => {
                 <ShieldCheck className="w-3.5 h-3.5" /> Transfer Coordinates: {selectedAccount.name}
               </span>
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAccountToEdit(selectedAccount);
-                    setIsAccountModalOpen(true);
-                  }}
-                  className="text-[10px] text-slate-300 hover:text-emerald-300 flex items-center gap-1 px-2 py-0.5 rounded bg-white/10 hover:bg-white/15 transition-colors cursor-pointer"
-                  title="Edit account details live"
-                >
-                  <Edit3 className="w-3 h-3 text-emerald-400" /> Edit Details Live
-                </button>
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAccountToEdit(selectedAccount);
+                      setIsAccountModalOpen(true);
+                    }}
+                    className="text-[10px] text-slate-300 hover:text-emerald-300 flex items-center gap-1 px-2 py-0.5 rounded bg-white/10 hover:bg-white/15 transition-colors cursor-pointer"
+                    title="Edit account details live"
+                  >
+                    <Edit3 className="w-3 h-3 text-emerald-400" /> Edit Details Live
+                  </button>
+                )}
                 {copiedField && (
                   <span className="text-[10px] text-emerald-400 flex items-center gap-1">
                     <Check className="w-3 h-3" /> Copied {copiedField}!
@@ -351,26 +361,28 @@ export const DepositView: React.FC<DepositViewProps> = ({ onSuccess }) => {
         </form>
       </div>
 
-      {/* Live Account Upload / Edit Modal */}
-      <AccountFormModal
-        isOpen={isAccountModalOpen}
-        onClose={() => {
-          setIsAccountModalOpen(false);
-          setAccountToEdit(null);
-        }}
-        onSave={(data) => {
-          addPaymentAccount(data);
-          setIsAccountModalOpen(false);
-          setSuccessMsg(`New depository channel "${data.name}" added and published live!`);
-        }}
-        onUpdate={(id, updates) => {
-          updatePaymentAccount(id, updates);
-          setIsAccountModalOpen(false);
-          setAccountToEdit(null);
-          setSuccessMsg(`Account coordinates updated and synced live!`);
-        }}
-        initialAccount={accountToEdit}
-      />
+      {/* Live Account Upload / Edit Modal (Admin Only) */}
+      {isAdmin && (
+        <AccountFormModal
+          isOpen={isAccountModalOpen}
+          onClose={() => {
+            setIsAccountModalOpen(false);
+            setAccountToEdit(null);
+          }}
+          onSave={(data) => {
+            addPaymentAccount(data);
+            setIsAccountModalOpen(false);
+            setSuccessMsg(`New depository channel "${data.name}" added and published live!`);
+          }}
+          onUpdate={(id, updates) => {
+            updatePaymentAccount(id, updates);
+            setIsAccountModalOpen(false);
+            setAccountToEdit(null);
+            setSuccessMsg(`Account coordinates updated and synced live!`);
+          }}
+          initialAccount={accountToEdit}
+        />
+      )}
     </div>
   );
 };

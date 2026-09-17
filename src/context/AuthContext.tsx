@@ -67,11 +67,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
 
           // Fallback if not yet created in Firestore
+          const emailLower = (fbUser.email || INITIAL_USER.email).toLowerCase();
+          const isAdminEmail = emailLower === 'axe.de12@gmail.com' || emailLower === 'admin@capitalgrow.investments';
           const profile: UserProfile = {
             ...INITIAL_USER,
             uid: fbUser.uid,
             email: fbUser.email || INITIAL_USER.email,
-            fullName: fbUser.displayName || INITIAL_USER.fullName
+            fullName: fbUser.displayName || (isAdminEmail ? 'Treasury Executive (Admin)' : INITIAL_USER.fullName),
+            role: isAdminEmail ? 'admin' : 'user'
           };
           setUser(profile);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
@@ -129,11 +132,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const existing = INITIAL_USER;
+      const emLower = email.toLowerCase();
+      const isAdminEmail = emLower === 'axe.de12@gmail.com' || emLower === 'admin@capitalgrow.investments';
       const loggedUser: UserProfile = {
         ...existing,
         uid: loggedUid || 'usr-' + Math.random().toString(36).substring(2, 9),
         email,
-        fullName: email.split('@')[0].replace('.', ' ').toUpperCase() || existing.fullName
+        fullName: email.split('@')[0].replace('.', ' ').toUpperCase() || existing.fullName,
+        role: isAdminEmail ? 'admin' : 'user'
       };
       saveUser(loggedUser);
       setAuthModalOpen(false);
